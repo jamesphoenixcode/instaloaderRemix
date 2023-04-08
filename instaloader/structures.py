@@ -909,6 +909,20 @@ class Profile:
     def biography(self) -> str:
         return normalize("NFC", self._metadata('biography'))
 
+    def get_sponsors(self) -> List['Profile']:
+        """
+        Return a list of :class:`Profile` sponsors wich you can iterate over.
+
+        .. versionadded:: 4.10
+        """
+        if len(self._metadata('biography_with_entities')["entities"]) == 0:
+            return []
+        else:
+            sponsorsList = []
+            for sponsor in self._metadata('biography_with_entities')["entities"]:
+                sponsorsList.append(Profile.from_username(self._context, sponsor["user"]["username"]))
+            return sponsorsList
+        
     @property
     def biography_hashtags(self) -> List[str]:
         """
